@@ -27,7 +27,7 @@ jobs:
       - name: Build APK
         run: flutter build apk --release
       - name: Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: android-apk
           path: build/app/outputs/flutter-apk/app-release.apk
@@ -46,7 +46,7 @@ jobs:
       - name: Build iOS (no codesign)
         run: flutter build ios --release --no-codesign
       - name: Upload iOS build
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ios-build
           path: build/ios/iphoneos/Runner.app
@@ -65,7 +65,7 @@ jobs:
       - name: Build Windows
         run: flutter build windows --release
       - name: Upload Windows build
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: windows-build
           path: build/windows/runner/Release/
@@ -84,7 +84,7 @@ jobs:
       - name: Build Linux
         run: flutter build linux --release
       - name: Upload Linux build
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: linux-build
           path: build/linux/x64/release/bundle/
@@ -103,7 +103,7 @@ jobs:
       - name: Build Web (base href)
         run: flutter build web --base-href=/flutter-cross-platform-clock/
       - name: Upload Web build
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: web-build
           path: build/web/
@@ -114,7 +114,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Download Web Artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: web-build
           path: web-built/
