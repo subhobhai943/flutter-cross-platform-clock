@@ -1,0 +1,85 @@
+name: Release All Platform Builds
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build-all-platforms:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build Android APK
+        run: flutter build apk --release
+      - name: Build Android App Bundle
+        run: flutter build appbundle --release
+      - name: Build Web App
+        run: flutter build web --release
+
+      - name: Build Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev
+      - name: Build Linux App
+        run: flutter build linux --release
+        continue-on-error: true
+
+      - name: "Build Windows App (skipped on macOS/Linux)"
+        if: runner.os == 'Windows'
+        run: flutter build windows --release
+        continue-on-error: true
+
+      - name: "Build iOS App (skipped except macOS)"
+        if: runner.os == 'macOS'
+        run: flutter build ios --release --no-codesign
+        continue-on-error: true
+
+      - name: Archive Windows build
+        if: runner.os == 'Windows'
+        run: Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath windows-app.zip
+        continue-on-error: true
+
+      - name: Archive Linux build
+        run: |
+          tar -czvf linux-app.tar.gz -C build/linux/x64/release/bundle .
+        continue-on-error: true
+
+      - name: Create IPA archive (macOS only)
+        if: runner.os == 'macOS'
+        run: |
+          cd build/ios/iphoneos
+          mkdir Payload
+          cp -r Runner.app Payload/
+          zip -r app-release.ipa Payload
+        continue-on-error: true
+
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            build/app/outputs/flutter-apk/app-release.apk
+            build/app/outputs/bundle/release/app-release.aab
+            build/web/*
+            linux-app.tar.gz
+            windows-app.zip
+            build/ios/iphoneos/app-release.ipa
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
