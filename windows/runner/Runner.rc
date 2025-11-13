@@ -1,0 +1,25 @@
+IDI_APP_ICON ICON "resources\\app_icon.ico"
+
+1 VERSIONINFO
+FILEVERSION     1,0,0,0
+PRODUCTVERSION  1,0,0,0
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "040904E4"
+    BEGIN
+      VALUE "CompanyName", "com.example" "\0"
+      VALUE "FileDescription", "flutter_clock_app" "\0"
+      VALUE "FileVersion", "1.0.0.0" "\0"
+      VALUE "InternalName", "flutter_clock_app" "\0"
+      VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
+      VALUE "OriginalFilename", "flutter_clock_app.exe" "\0"
+      VALUE "ProductName", "flutter_clock_app" "\0"
+      VALUE "ProductVersion", "1.0.0.0" "\0"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x409, 1252
+  END
+END
